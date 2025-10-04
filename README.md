@@ -1,6 +1,6 @@
 
-<H3>ENTER YOUR NAME</H3>
-<H3>ENTER YOUR REGISTER NO.</H3>
+<H3>ENTER YOUR NAME: PRADEEP V</H3>
+<H3>ENTER YOUR REGISTER NO: 212223240119</H3>
 <H3>EX. NO.4</H3>
 <H3>DATE:</H3>
 <H1 ALIGN =CENTER>Implementation of MLP with Backpropagation for Multiclassification</H1>
@@ -116,11 +116,50 @@ Normalize our dataset.
 
 <H3>Program:</H3> 
 
-Insert your code here
+```
+
+import pandas as pd
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names=['sepal-lenght','sepal-width','petal-length','petal-width','Class']
+irisdata=pd.read_csv(url,names=names)
+
+x=irisdata.iloc[:,0:4]
+y=irisdata['Class']
+
+le=preprocessing.LabelEncoder()
+y_encoded=le.fit_transform(y)
+
+x_train,x_test,y_train,y_test=train_test_split(x,y_encoded,test_size=0.25,random_state=42)
+
+scaler=StandardScaler()
+scaler.fit(x_train)
+x_train=scaler.transform(x_train)
+x_test=scaler.transform(x_test)
+
+mlp=MLPClassifier(hidden_layer_sizes=(10,10,10),max_iter=1000)
+mlp.fit(x_train,y_train)
+
+predictions=mlp.predict(x_test)
+
+flower_predictions=le.inverse_transform(predictions)
+
+print(flower_predictions)
+print(confusion_matrix(y_test,predictions))
+print(classification_report(y_test,predictions))
+
+```
+
 
 <H3>Output:</H3>
 
-Show your results here
+<img width="595" height="399" alt="{CCE9BDA9-FDF2-443A-8A3D-94061EB8BD7A}" src="https://github.com/user-attachments/assets/f9c87cf7-c60e-4adc-a762-4f92b4b17897" />
+
 
 <H3>Result:</H3>
 Thus, MLP is implemented for multi-classification using python.
