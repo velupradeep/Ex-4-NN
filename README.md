@@ -2,7 +2,7 @@
 <H3>ENTER YOUR NAME: PRADEEP V</H3>
 <H3>ENTER YOUR REGISTER NO: 212223240119</H3>
 <H3>EX. NO.4</H3>
-<H3>DATE:</H3>
+<H3>DATE: 04.10.2025</H3>
 <H1 ALIGN =CENTER>Implementation of MLP with Backpropagation for Multiclassification</H1>
 <H3>Aim:</H3>
 To implement a Multilayer Perceptron for Multi classification
