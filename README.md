@@ -122,6 +122,7 @@ Normalize our dataset.
 ```
 
 import pandas as pd
+import sklearn
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -129,39 +130,77 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
 url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
-names=['sepal-lenght','sepal-width','petal-length','petal-width','Class']
-irisdata=pd.read_csv(url,names=names)
-
-x=irisdata.iloc[:,0:4]
-y=irisdata['Class']
-
-le=preprocessing.LabelEncoder()
-y_encoded=le.fit_transform(y)
-
-x_train,x_test,y_train,y_test=train_test_split(x,y_encoded,test_size=0.25,random_state=42)
-
-scaler=StandardScaler()
-scaler.fit(x_train)
-x_train=scaler.transform(x_train)
-x_test=scaler.transform(x_test)
-
-mlp=MLPClassifier(hidden_layer_sizes=(10,10,10),max_iter=1000)
-mlp.fit(x_train,y_train)
-
-predictions=mlp.predict(x_test)
-
-flower_predictions=le.inverse_transform(predictions)
-
-print(flower_predictions)
+names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'Class']
+irisdata = pd.read_csv(url, names=names)
+# Takes first 4 columns and assign them to variable "X"
+X = irisdata.iloc[:, 0:4]
+# Takes first 5th columns and assign them to variable "Y". Object dtype refers to strings.
+y = irisdata.select_dtypes(include=[object])
+X.head()
+y.head()
+# y actually contains all categories or classes:
+y.Class.unique()
+# Now transforming categorial into numerical values
+le = preprocessing.LabelEncoder()
+y = y.apply(le.fit_transform)
+y.head()
+# Now for train and test split (80% of  dataset into  training set and  other 20% into test data)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20)
+# Feature scaling
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+mlp = MLPClassifier(hidden_layer_sizes=(10, 10, 10), max_iter=1000)
+mlp.fit(X_train, y_train.values.ravel())
+predictions = mlp.predict(X_test)
+print(predictions)
+# Last thing: evaluation of algorithm performance in classifying flowers
 print(confusion_matrix(y_test,predictions))
 print(classification_report(y_test,predictions))
-
 ```
 
 
 <H3>Output:</H3>
 
-<img width="595" height="399" alt="{CCE9BDA9-FDF2-443A-8A3D-94061EB8BD7A}" src="https://github.com/user-attachments/assets/f9c87cf7-c60e-4adc-a762-4f92b4b17897" />
+<img width="943" height="333" alt="{35FFCC90-F645-4D34-90CA-AA4B875D948D}" src="https://github.com/user-attachments/assets/0ed5c26b-ff5e-47ff-b128-1a9800d8edaf" />
+
+
+
+<H3>Program:</H3> 
+
+```
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+arr = ['SepalLength', 'SepalWidth', 'PetalLength', 'PetalWidth', 'Species']
+df = pd.read_csv(url, names=arr)
+print(df.head())
+a = df.iloc[:, 0:4]
+b = df.select_dtypes(include=[object])
+b = df.iloc[:,4:5]
+training_a, testing_a, training_b, testing_b = train_test_split(a, b, test_size = 0.25)
+myscaler = StandardScaler()
+myscaler.fit(training_a)
+training_a = myscaler.transform(training_a)
+testing_a = myscaler.transform(testing_a)
+m1 = MLPClassifier(hidden_layer_sizes=(12, 13, 14), activation='relu', solver='adam', max_iter=2500)
+m1.fit(training_a, training_b.values.ravel())
+predicted_values = m1.predict(testing_a)
+print(confusion_matrix(testing_b,predicted_values))
+print(classification_report(testing_b,predicted_values))
+```
+
+<H3>Output:</H3>
+<img width="936" height="475" alt="{3BF766A7-3518-4208-9E4D-49F66C5AA2A3}" src="https://github.com/user-attachments/assets/4cc3194c-6b46-4d8b-a4ec-388e9b97dfe5" />
+
+
+
+
 
 
 <H3>Result:</H3>
